@@ -1,7 +1,8 @@
-package com.gonzalocl.trackingexport
+package com.gonzalocl.trackingexport.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.gonzalocl.trackingexport.R
 
 class MainActivity : AppCompatActivity() {
 
