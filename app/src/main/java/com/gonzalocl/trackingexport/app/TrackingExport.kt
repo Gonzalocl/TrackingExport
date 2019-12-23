@@ -1,4 +1,5 @@
 package com.gonzalocl.trackingexport.app
 
-class TrackingExport {
+object TrackingExport {
+
 }
