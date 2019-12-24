@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val tracksPath = "Tracks"
     private val tracksExportPath = "TracksExport"
     private val documentsPath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) Environment.DIRECTORY_DOCUMENTS else "Documents"
+    private var placemarkTemplate = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,22 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        val placemarkTemplateInputStream = resources.openRawResource(R.raw.template_placemark)
+        val placemarkTemplateInputStreamReader = InputStreamReader(placemarkTemplateInputStream)
+        val placemarkTemplateBufferedReader = BufferedReader(placemarkTemplateInputStreamReader)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            placemarkTemplate = placemarkTemplateBufferedReader.lines().collect(Collectors.joining("\n"))
+        } else {
+//            TODO("VERSION.SDK_INT < N")
+            Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        placemarkTemplateInputStream.close()
+        placemarkTemplateInputStreamReader.close()
+        placemarkTemplateBufferedReader.close()
 
     }
 
@@ -105,6 +122,11 @@ class MainActivity : AppCompatActivity() {
         * carReturn coordinates
         */
 
+        val trackingCoordinates = StringBuffer()
+        val timestampPlacemarks = StringBuffer()
+        val carGoingCoordinates = StringBuffer()
+        val carReturnCoordinates = StringBuffer()
+
 
         val interval = TrackingExport.timeInterval
         val filter = TrackingExport.filterAccuracy
@@ -119,15 +141,16 @@ class MainActivity : AppCompatActivity() {
         var row = trackingBufferedReader.readLine()
         var rowSplit = row.split(",")
         val trackStartTime = rowSplit[4].toLong()
+        var nextPlacemark = trackStartTime + interval
 
 
-        var latitude: Double
-        var longitude: Double
-        var timestamp: Long
+        var latitude: Double = 0.0
+        var longitude: Double = 0.0
+        var timestamp: Long = 0
 
-        var lastLatitude: Double
-        var lastLongitude: Double
-        var lastTimestamp: Long
+        var lastLatitude: Double = 0.0
+        var lastLongitude: Double = 0.0
+        var lastTimestamp: Long = 0
 
         var ok = false
         while (row != null && !ok) {
@@ -150,21 +173,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         // copy coordinates
+        trackingCoordinates.append("$lastLongitude,$lastLatitude,0\n")
 
         // set first placemark
+        timestampPlacemarks.append(getPlacemarkString(lastLongitude, lastLatitude, trackStartTime, 0) + "\n")
 
         while (row != null) {
             rowSplit = row.split(",")
+            timestamp = rowSplit[4].toLong()
             if (!(filter && rowSplit[3].toDouble() > threshold)) {
                 latitude = rowSplit[0].toDouble()
                 longitude = rowSplit[1].toDouble()
-                timestamp = rowSplit[4].toLong()
 
                 // copy coordinates
+                trackingCoordinates.append("$longitude,$latitude,0\n")
 
                 // compute distance
 
                 // set placemark
+                if (timestamp > nextPlacemark) {
+                    timestampPlacemarks.append(getPlacemarkString(longitude, latitude, timestamp, timestamp-trackStartTime) + "\n")
+                    nextPlacemark += interval
+                }
+
+                // check timestamp order
 
                 lastLatitude = latitude
                 lastLongitude = longitude
@@ -173,12 +205,11 @@ class MainActivity : AppCompatActivity() {
             row = trackingBufferedReader.readLine()
         }
 
-        // set last placemark
-
-
         trackingFileReader.close()
         trackingBufferedReader.close()
 
+        // set last placemark
+        timestampPlacemarks.append(getPlacemarkString(longitude, latitude, timestamp, timestamp-trackStartTime) + "\n")
 
 
 
@@ -200,7 +231,17 @@ class MainActivity : AppCompatActivity() {
 
 
         val exportedFilePrintWriter = PrintWriter(exportedFile)
-        exportedFilePrintWriter.printf(templateString)
+        exportedFilePrintWriter.printf(templateString,
+            globalTitle,
+            "",
+            trackTitle,
+            "",
+            trackingCoordinates,
+            timestampPlacemarks,
+            "",
+            carGoingCoordinates,
+            "",
+            carReturnCoordinates)
 
         exportedFilePrintWriter.close()
 
@@ -219,6 +260,13 @@ class MainActivity : AppCompatActivity() {
         }
         startActivity(Intent.createChooser(shareTrack, trackTitle))*/
 
+    }
+
+    private fun getPlacemarkString(longitude: Double, latitude: Double, absoluteTime: Long, relativeTime: Long): String {
+        val name = "$absoluteTime / $relativeTime"
+        val description = "$absoluteTime //// $relativeTime"
+        val coordinates = "$longitude,$latitude,0"
+        return String.format(placemarkTemplate, name, description, coordinates)
     }
 
 }
