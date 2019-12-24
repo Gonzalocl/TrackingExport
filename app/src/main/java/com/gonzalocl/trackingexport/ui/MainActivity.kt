@@ -1,6 +1,7 @@
 package com.gonzalocl.trackingexport.ui
 
 import android.content.Intent
+import android.icu.util.GregorianCalendar
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.Toast
 import com.gonzalocl.trackingexport.R
 import com.gonzalocl.trackingexport.app.TrackingExport
 import java.io.*
+import java.util.*
 import java.util.stream.Collectors
 
 class MainActivity : AppCompatActivity() {
@@ -263,10 +265,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getPlacemarkString(longitude: Double, latitude: Double, absoluteTime: Long, relativeTime: Long): String {
-        val name = "$absoluteTime / $relativeTime"
-        val description = "$absoluteTime //// $relativeTime"
-        val coordinates = "$longitude,$latitude,0"
-        return String.format(placemarkTemplate, name, description, coordinates)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            val absoluteCalendar = GregorianCalendar.getInstance()
+            absoluteCalendar.time = Date(absoluteTime)
+
+            val absoluteHours = absoluteCalendar.get(Calendar.HOUR_OF_DAY)
+            val absoluteMinutes = absoluteCalendar.get(Calendar.MINUTE).toString().padStart(2, '0')
+
+            val relativeHours: Long = relativeTime/1000/60/60
+            val relativeMinutes = (relativeTime/1000/60 % 60).toString().padStart(2, '0')
+
+            val name = "$absoluteHours:$absoluteMinutes / $relativeHours:$relativeMinutes"
+            val description = "Tiempo absoluto: $absoluteHours:$absoluteMinutes<br>Tiempo relativo: $relativeHours:$relativeMinutes"
+            val coordinates = "$longitude,$latitude,0"
+
+            return String.format(placemarkTemplate, name, description, coordinates)
+        } else {
+//            TODO("VERSION.SDK_INT < N")
+            Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show()
+            return ""
+        }
     }
 
 }
