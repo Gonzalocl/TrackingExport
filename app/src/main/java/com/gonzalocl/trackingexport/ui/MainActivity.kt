@@ -106,17 +106,74 @@ class MainActivity : AppCompatActivity() {
         */
 
 
-        // timestamp placemarks
         val interval = TrackingExport.timeInterval
+        val filter = TrackingExport.filterAccuracy
+        val threshold = TrackingExport.filterAccuracyThreshold
+
+
         val trackingFileReader = FileReader(tracking)
         val trackingBufferedReader = BufferedReader(trackingFileReader)
+
+
         trackingBufferedReader.readLine()
         var row = trackingBufferedReader.readLine()
-        val trackStartTime = Integer.parseInt(row.split(",")[4])
-        while (row != null) {
+        var rowSplit = row.split(",")
+        val trackStartTime = rowSplit[4].toLong()
 
+
+        var latitude: Double
+        var longitude: Double
+        var timestamp: Long
+
+        var lastLatitude: Double
+        var lastLongitude: Double
+        var lastTimestamp: Long
+
+        var ok = false
+        while (row != null && !ok) {
+            rowSplit = row.split(",")
+            if (!(filter && rowSplit[3].toDouble() > threshold)) {
+                lastLatitude = rowSplit[0].toDouble()
+                lastLongitude = rowSplit[1].toDouble()
+                lastTimestamp = rowSplit[4].toLong()
+                ok = true
+            }
             row = trackingBufferedReader.readLine()
         }
+
+        if (!ok) {
+            Toast.makeText(this, "All points filtered stopping", Toast.LENGTH_LONG).show()
+            trackingFileReader.close()
+            trackingBufferedReader.close()
+            exportedFile.delete()
+            return
+        }
+
+        // copy coordinates
+
+        // set first placemark
+
+        while (row != null) {
+            rowSplit = row.split(",")
+            if (!(filter && rowSplit[3].toDouble() > threshold)) {
+                latitude = rowSplit[0].toDouble()
+                longitude = rowSplit[1].toDouble()
+                timestamp = rowSplit[4].toLong()
+
+                // copy coordinates
+
+                // compute distance
+
+                // set placemark
+
+                lastLatitude = latitude
+                lastLongitude = longitude
+                lastTimestamp = timestamp
+            }
+            row = trackingBufferedReader.readLine()
+        }
+
+        // set last placemark
 
 
         trackingFileReader.close()
