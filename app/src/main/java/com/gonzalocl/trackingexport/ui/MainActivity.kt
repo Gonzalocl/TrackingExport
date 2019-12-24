@@ -208,6 +208,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // check timestamp order
+                if (lastTimestamp > timestamp) {
+                    Toast.makeText(this, "TIMESTAMP ORDER INVERTED DETECTED", Toast.LENGTH_LONG).show()
+                }
 
                 lastLatitude = latitude
                 lastLongitude = longitude
