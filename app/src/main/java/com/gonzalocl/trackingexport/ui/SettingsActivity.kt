@@ -28,7 +28,10 @@ class SettingsActivity: AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                TrackingExport.timeInterval = Integer.parseInt(s.toString())*60*1000
+                if (s.toString().equals(""))
+                    TrackingExport.timeInterval = 0
+                else
+                    TrackingExport.timeInterval = s.toString().toLong()*60*1000
             }
         })
 
@@ -40,7 +43,10 @@ class SettingsActivity: AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                TrackingExport.timeInterval = Integer.parseInt(s.toString())
+                if (s.toString().equals(""))
+                    TrackingExport.filterAccuracyThreshold = 0
+                else
+                    TrackingExport.filterAccuracyThreshold = s.toString().toLong()
             }
         })
 
