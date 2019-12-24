@@ -88,6 +88,60 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        /*
+        * global title
+        * global description
+        *
+        * track title
+        * track description
+        * tracks coordinates
+        *
+        * timestamp placemarks
+        *
+        * carGoing description
+        * carGoing coordinates
+        *
+        * carReturn description
+        * carReturn coordinates
+        */
+
+
+        // timestamp placemarks
+        val interval = TrackingExport.timeInterval
+        val trackingFileReader = FileReader(tracking)
+        val trackingBufferedReader = BufferedReader(trackingFileReader)
+        trackingBufferedReader.readLine()
+        var row = trackingBufferedReader.readLine()
+        val trackStartTime = Integer.parseInt(row.split(",")[4])
+        while (row != null) {
+
+            row = trackingBufferedReader.readLine()
+        }
+
+
+        trackingFileReader.close()
+        trackingBufferedReader.close()
+
+
+
+
+
+
+
+
+
+
+
+
+        // global title
+        val trackDateSplit = trackDate.split("-")
+        val globalTitle = "${trackDateSplit[2]}/${trackDateSplit[1]}/${trackDateSplit[0][2]}${trackDateSplit[0][3]} $trackTitle"
+
+
+
+
+
+
         val exportedFilePrintWriter = PrintWriter(exportedFile)
         exportedFilePrintWriter.printf(templateString)
 
