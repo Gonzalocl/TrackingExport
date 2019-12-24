@@ -147,6 +147,10 @@ class MainActivity : AppCompatActivity() {
 
         exportedFilePrintWriter.close()
 
+        if (TrackingExport.filterAccuracy) {
+            Toast.makeText(this, "FILTERED: ${TrackingExport.filterAccuracyThreshold}", Toast.LENGTH_LONG).show()
+        }
+
         Toast.makeText(this, "Completed", Toast.LENGTH_LONG).show()
 
 /*        val shareTrack = Intent().apply {

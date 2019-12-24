@@ -16,8 +16,8 @@ class SettingsActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        findViewById<EditText>(R.id.time_interval).setText(String.format("%d", TrackingExport.timeInterval))
-        findViewById<EditText>(R.id.filter_accuracy_threshold).setText(String.format("%d", TrackingExport.filterAccuracyThreshold))
+        findViewById<EditText>(R.id.time_interval).setText("${TrackingExport.timeInterval}")
+        findViewById<EditText>(R.id.filter_accuracy_threshold).setText("${TrackingExport.filterAccuracyThreshold}")
         findViewById<Switch>(R.id.filter_accuracy).isChecked = TrackingExport.filterAccuracy
 
         findViewById<EditText>(R.id.time_interval).addTextChangedListener(object : TextWatcher {
