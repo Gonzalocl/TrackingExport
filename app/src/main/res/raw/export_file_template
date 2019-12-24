@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
     <Document>
-        <name>test</name>
-        <description>pijo</description>
+        <name>%s</name>
+        <description><![CDATA[%s]]></description>
 
         <Style id="icon-timestamp">
             <IconStyle>
-                <color>ffffff55</color>
                 <scale>1</scale>
                 <Icon>
                     <href>https://gonzalocl1024.pythonanywhere.com/static_served/icon-1.png</href>
                 </Icon>
             </IconStyle>
-            <LabelStyle>
-                <scale>0</scale>
-            </LabelStyle>
         </Style>
 
         <Style id="line-car">
@@ -34,111 +30,39 @@
         <Folder>
             <name>Ruta</name>
             <Placemark>
-                <name>Castillitos y cuartel de Boletes</name>
-                <description><![CDATA[Castillitos y cuartel de Boletes<br>5h21min, 17.4 km]]></description>
+                <name><![CDATA[%s]]></name>
+                <description><![CDATA[%s]]></description>
                 <styleUrl>#line-tracking</styleUrl>
                 <LineString>
                     <coordinates>
-                        -1.125874,37.541406,0
-                        -1.125855,37.541394,0
-                        -1.125849,37.541423,0
-                        -1.125863,37.541409,0
-                        -1.125896,37.54126,0
-                        -1.125908,37.541265,0
-                        -1.125921,37.54127,0
-                        -1.125931,37.54128,0
-                        -1.125933,37.541289,0
-                        -1.12593,37.541289,0
-                        -1.125923,37.54129,0
-                        -1.125914,37.541288,0
-                        -1.125908,37.541295,0
-                        -1.125904,37.541301,0
-                        -1.125903,37.541311,0
-                        -1.125896,37.541321,0
-                        -1.125887,37.541326,0
+                        %s
                     </coordinates>
                 </LineString>
             </Placemark>
         </Folder>
         <Folder>
             <name>Tiempo Ruta</name>
-            <Placemark>
-                <name>12:30 / 1:30</name>
-                <description><![CDATA[Tiempo absoluto: 12:30<br>Tiempo relativo: 1:30]]></description>
-                <styleUrl>#icon-timestamp</styleUrl>
-                <Point>
-                    <coordinates>
-                        -1.0967734,37.5773934,0
-                    </coordinates>
-                </Point>
-            </Placemark>
-            <Placemark>
-                <name>12:45 / 1:45</name>
-                <description><![CDATA[Tiempo absoluto: 12:30<br>Tiempo relativo: 1:30]]></description>
-                <styleUrl>#icon-timestamp</styleUrl>
-                <Point>
-                    <coordinates>
-                        -1.1112788,37.5693662,0
-                    </coordinates>
-                </Point>
-            </Placemark>
-            <Placemark>
-                <name>13:00 / 2:00</name>
-                <description><![CDATA[Tiempo absoluto: 12:30<br>Tiempo relativo: 1:30]]></description>
-                <styleUrl>#icon-timestamp</styleUrl>
-                <Point>
-                    <coordinates>
-                        -1.1219218,37.57372,0
-                    </coordinates>
-                </Point>
-            </Placemark>
+            %s
         </Folder>
         <Folder>
             <name>Coche</name>
             <Placemark>
-                <name>Ida</name>
-                <description>27.4 km</description>
+                <name><![CDATA[Ida]]></name>
+                <description><![CDATA[%s]]></description>
                 <styleUrl>#line-car</styleUrl>
                 <LineString>
                     <coordinates>
-                        -1.000218,37.60822,0
-                        -1.000332,37.608265,0
-                        -1.000445,37.608304,0
-                        -1.125872,37.541502,0
-                        -1.125878,37.541505,0
-                        -1.125872,37.541479,0
-                        -1.125871,37.541474,0
-                        -1.125867,37.541464,0
-                        -1.125867,37.541465,0
-                        -1.125872,37.541455,0
-                        -1.125881,37.541449,0
-                        -1.125881,37.541439,0
-                        -1.125877,37.541437,0
-                        -1.125885,37.541437,0
-                        -1.125886,37.541437,0
+                        %s
                     </coordinates>
                 </LineString>
             </Placemark>
             <Placemark>
-                <name>Volver</name>
-                <description>27.3 km</description>
+                <name><![CDATA[Vuelta]]></name>
+                <description><![CDATA[%s]]></description>
                 <styleUrl>#line-car</styleUrl>
                 <LineString>
                     <coordinates>
-                        -1.003023,37.609324,0
-                        -1.002872,37.609303,0
-                        -1.002731,37.609262,0
-                        -1.002598,37.609199,0
-                        -1.00248,37.609121,0
-                        -1.002352,37.609042,0
-                        -1.002086,37.60892,0
-                        -1.001941,37.608864,0
-                        -1.001265,37.608587,0
-                        -1.001134,37.608534,0
-                        -1.000999,37.608476,0
-                        -1.000863,37.608426,0
-                        -1.000732,37.608377,0
-                        -1.000595,37.608327,0
+                        %s
                     </coordinates>
                 </LineString>
             </Placemark>

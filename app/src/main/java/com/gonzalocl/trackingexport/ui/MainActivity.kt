@@ -73,6 +73,8 @@ class MainActivity : AppCompatActivity() {
 
         exportedFilePrintWriter.close()
 
+        Toast.makeText(this, "Completed", Toast.LENGTH_LONG).show()
+
 /*        val shareTrack = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, exportedFile.toUri().toString())
