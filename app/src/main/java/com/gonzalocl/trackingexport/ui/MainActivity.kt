@@ -5,14 +5,14 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.gonzalocl.trackingexport.R
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
-import java.io.PrintWriter
+import com.gonzalocl.trackingexport.app.TrackingExport
+import java.io.*
 import java.util.stream.Collectors
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +24,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        findViewById<EditText>(R.id.track_title).addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                TrackingExport.currentTrackTitle = s.toString()
+            }
+
+        })
+
     }
 
     fun clickSettings(view: View) {
@@ -41,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         val tracking = trackFiles[trackFiles.size-4]
         val carReturn = trackFiles[trackFiles.size-2]
 
-        val trackTitle = findViewById<EditText>(R.id.track_title).text.toString()
+        val trackTitle = TrackingExport.currentTrackTitle
         val trackDate = carGoing.name.split("_")[0]
 
         val templateInputStream = resources.openRawResource(R.raw.export_file_template)
