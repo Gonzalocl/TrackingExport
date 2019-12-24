@@ -3,7 +3,6 @@ package com.gonzalocl.trackingexport.ui
 import android.content.Intent
 import android.icu.util.GregorianCalendar
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -11,13 +10,21 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.gonzalocl.trackingexport.R
 import com.gonzalocl.trackingexport.app.TrackingExport
 import java.io.*
 import java.util.*
 import java.util.stream.Collectors
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
+
+
+    private val EARTH_EQUATORIAL_CIRCUMFERENCE: Double = 40075017.0
+    private val EARTH_MERIDIONAL_CIRCUMFERENCE: Double = 40007860.0
 
     private val tracksPath = "Tracks"
     private val tracksExportPath = "TracksExport"
@@ -144,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         var rowSplit = row.split(",")
         val trackStartTime = rowSplit[4].toLong()
         var nextPlacemark = trackStartTime + interval
+        var totalDistance: Double = 0.0
 
 
         var latitude: Double = 0.0
@@ -191,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                 trackingCoordinates.append("$longitude,$latitude,0\n")
 
                 // compute distance
+                totalDistance += computeDistance(lastLongitude, lastLatitude, longitude, latitude)
 
                 // set placemark
                 if (timestamp > nextPlacemark) {
@@ -286,6 +295,14 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show()
             return ""
         }
+    }
+
+    private fun computeDistance(lastLongitude: Double, lastLatitude: Double, longitude: Double, latitude: Double): Double {
+        return sqrt(
+            ((latitude - lastLatitude) * (EARTH_EQUATORIAL_CIRCUMFERENCE / 360.0)).pow(2.0) +
+                    ((longitude - lastLongitude) * (cos(((latitude + lastLatitude) / 2.0) * Math.PI / 180.0)) *
+                            (EARTH_MERIDIONAL_CIRCUMFERENCE / 360.0)).pow(2.0)
+        )
     }
 
 }
