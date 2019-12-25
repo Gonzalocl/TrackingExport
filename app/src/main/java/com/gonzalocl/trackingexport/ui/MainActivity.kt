@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gonzalocl.trackingexport.R
 import com.gonzalocl.trackingexport.app.TrackingExport
 import java.io.*
+import java.sql.Timestamp
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.cos
@@ -441,6 +442,35 @@ class MainActivity : AppCompatActivity() {
 
         // set last placemark
 //        timestampPlacemarks.append(getPlacemarkString(longitude, latitude, timestamp, timestamp-trackStartTime) + "\n")
+
+        // track description
+        val trackTime = lastTimestamp - trackStartTime
+
+        trackingDescription.append("Hora de salida: %02d:%02d<br>".format(timestampGetHours(trackStartTime), timestampGetMinutes(trackStartTime)))
+        trackingDescription.append("Hora de llegada: %02d:%02d<br>".format(timestampGetHours(lastTimestamp), timestampGetMinutes(lastTimestamp)))
+        trackingDescription.append("Tiempo: %d:%02d<br>".format(trackTime/1000/60/60, trackTime/1000/60 % 60))
+        trackingDescription.append("Distancia: %.2f km".format(totalDistance/1000))
+
+    }
+
+    private fun timestampGetHours(timestamp: Long): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val calendar = GregorianCalendar.getInstance()
+            calendar.time = Date(timestamp)
+            return calendar.get(Calendar.HOUR_OF_DAY)
+        } else {
+            return 0
+        }
+    }
+
+    private fun timestampGetMinutes(timestamp: Long): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val calendar = GregorianCalendar.getInstance()
+            calendar.time = Date(timestamp)
+            return calendar.get(Calendar.MINUTE)
+        } else {
+            return 0
+        }
     }
 
 }
