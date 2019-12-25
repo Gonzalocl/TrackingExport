@@ -152,6 +152,7 @@ class MainActivity : AppCompatActivity() {
         val trackStartTime = rowSplit[4].toLong()
         var nextPlacemark = trackStartTime + interval
         var totalDistance: Double = 0.0
+        var filtered = 0
 
 
         var latitude: Double = 0.0
@@ -170,6 +171,8 @@ class MainActivity : AppCompatActivity() {
                 lastLongitude = rowSplit[1].toDouble()
                 lastTimestamp = rowSplit[4].toLong()
                 ok = true
+            } else {
+                filtered++
             }
             row = trackingBufferedReader.readLine()
         }
@@ -215,6 +218,8 @@ class MainActivity : AppCompatActivity() {
                 lastLatitude = latitude
                 lastLongitude = longitude
                 lastTimestamp = timestamp
+            } else {
+                filtered++
             }
             row = trackingBufferedReader.readLine()
         }
@@ -239,17 +244,23 @@ class MainActivity : AppCompatActivity() {
         val trackDateSplit = trackDate.split("-")
         val globalTitle = "${trackDateSplit[2]}/${trackDateSplit[1]}/${trackDateSplit[0][2]}${trackDateSplit[0][3]} $trackTitle"
 
+        // track description
+        val trackTime = lastTimestamp - trackStartTime
+        val trackHours: Long = trackTime/1000/60/60
+        val trackMinutes = (trackTime/1000/60 % 60).toString().padStart(2, '0')
+        totalDistance /= 1000
+        val totalDistanceString = "%.2f".format(totalDistance)
 
-
+        val trackDescription = "$trackTitle<br>${trackHours}h${trackMinutes}min, $totalDistanceString km"
 
 
 
         val exportedFilePrintWriter = PrintWriter(exportedFile)
         exportedFilePrintWriter.printf(templateString,
             globalTitle,
-            "",
+            trackDescription,
             trackTitle,
-            "",
+            trackDescription,
             trackingCoordinates,
             timestampPlacemarks,
             "",
@@ -260,7 +271,7 @@ class MainActivity : AppCompatActivity() {
         exportedFilePrintWriter.close()
 
         if (TrackingExport.filterAccuracy) {
-            Toast.makeText(this, "FILTERED: ${TrackingExport.filterAccuracyThreshold}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "FILTERED : ${TrackingExport.filterAccuracyThreshold} : $filtered", Toast.LENGTH_LONG).show()
         }
 
         Toast.makeText(this, "Completed", Toast.LENGTH_LONG).show()
