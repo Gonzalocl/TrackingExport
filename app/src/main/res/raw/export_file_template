@@ -27,6 +27,13 @@
             </LineStyle>
         </Style>
 
+        <Style id="line-original">
+            <LineStyle>
+                <color>ffff0000</color>
+                <width>2</width>
+            </LineStyle>
+        </Style>
+
         <Folder>
             <name>Ruta</name>
             <Placemark>
@@ -60,6 +67,36 @@
                 <name><![CDATA[Vuelta]]></name>
                 <description><![CDATA[%s]]></description>
                 <styleUrl>#line-car</styleUrl>
+                <LineString>
+                    <coordinates>
+                        %s
+                    </coordinates>
+                </LineString>
+            </Placemark>
+        </Folder>
+        <Folder>
+            <name>Original</name>
+            <Placemark>
+                <name><![CDATA[Ruta]]></name>
+                <styleUrl>#line-original</styleUrl>
+                <LineString>
+                    <coordinates>
+                        %s
+                    </coordinates>
+                </LineString>
+            </Placemark>
+            <Placemark>
+                <name><![CDATA[Ida]]></name>
+                <styleUrl>#line-original</styleUrl>
+                <LineString>
+                    <coordinates>
+                        %s
+                    </coordinates>
+                </LineString>
+            </Placemark>
+            <Placemark>
+                <name><![CDATA[Vuelta]]></name>
+                <styleUrl>#line-original</styleUrl>
                 <LineString>
                     <coordinates>
                         %s

@@ -129,12 +129,20 @@ class MainActivity : AppCompatActivity() {
         *
         * carReturn description
         * carReturn coordinates
+        *
+        * tracks coordinates original
+        * carGoing coordinates original
+        * carReturn coordinates original
         */
 
         val trackingCoordinates = StringBuffer()
         val timestampPlacemarks = StringBuffer()
         val carGoingCoordinates = StringBuffer()
         val carReturnCoordinates = StringBuffer()
+
+        val trackingCoordinatesOriginal = StringBuffer()
+        val carGoingCoordinatesOriginal = StringBuffer()
+        val carReturnCoordinatesOriginal = StringBuffer()
 
 
         val interval = TrackingExport.timeInterval
@@ -193,10 +201,21 @@ class MainActivity : AppCompatActivity() {
 
         while (row != null) {
             rowSplit = row.split(",")
+            latitude = rowSplit[0].toDouble()
+            longitude = rowSplit[1].toDouble()
             timestamp = rowSplit[4].toLong()
+
+            // copy coordinates original
+            trackingCoordinatesOriginal.append("$longitude,$latitude,0\n")
+
+            // check timestamp order
+            if (lastTimestamp > timestamp) {
+                Toast.makeText(this, "TIMESTAMP ORDER INVERTED DETECTED", Toast.LENGTH_LONG).show()
+            }
+
+            lastTimestamp = timestamp
+
             if (!(filter && rowSplit[3].toDouble() > threshold)) {
-                latitude = rowSplit[0].toDouble()
-                longitude = rowSplit[1].toDouble()
 
                 // copy coordinates
                 trackingCoordinates.append("$longitude,$latitude,0\n")
@@ -210,14 +229,8 @@ class MainActivity : AppCompatActivity() {
                     nextPlacemark += interval
                 }
 
-                // check timestamp order
-                if (lastTimestamp > timestamp) {
-                    Toast.makeText(this, "TIMESTAMP ORDER INVERTED DETECTED", Toast.LENGTH_LONG).show()
-                }
-
                 lastLatitude = latitude
                 lastLongitude = longitude
-                lastTimestamp = timestamp
             } else {
                 filtered++
             }
@@ -265,7 +278,10 @@ class MainActivity : AppCompatActivity() {
             "",
             carGoingCoordinates,
             "",
-            carReturnCoordinates)
+            carReturnCoordinates,
+            trackingCoordinatesOriginal,
+            carGoingCoordinatesOriginal,
+            carReturnCoordinatesOriginal)
 
         exportedFilePrintWriter.close()
 
