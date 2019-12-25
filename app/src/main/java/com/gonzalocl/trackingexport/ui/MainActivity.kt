@@ -302,14 +302,13 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, "Completed", Toast.LENGTH_LONG).show()
 
-/*        val shareTrack = Intent().apply {
+        val shareTrackTitle = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, exportedFile.toUri().toString())
-//            putExtra(Intent.EXTRA_STREAM, Uri.parse(exportedFile.toUri().toString()))
-//            putExtra(Intent.EXTRA_STREAM, Uri.parse("content://"+exportedFile.absolutePath))
-            type = "application/vnd.google-earth.kml+xml"
+            `package` = "org.telegram.messenger"
+            putExtra(Intent.EXTRA_TEXT, "${trackDateSplit[2]}/${trackDateSplit[1]}/${trackDateSplit[0][2]}${trackDateSplit[0][3]} $trackTitle\n${trackHours}h${trackMinutes}min, $totalDistanceString km")
+            type = "text/plain"
         }
-        startActivity(Intent.createChooser(shareTrack, trackTitle))*/
+        startActivity(shareTrackTitle)
 
     }
 
