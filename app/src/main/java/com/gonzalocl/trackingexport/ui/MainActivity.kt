@@ -385,6 +385,7 @@ class MainActivity : AppCompatActivity() {
 
             lastTimestamp = timestamp
 
+            // TODO count hidden points in distance
             if (!((filter && rowSplit[3].toDouble() > threshold) || computeDistance(lastLongitude, lastLatitude, -0.99578, 37.6038) < 500)) {
                 ok = true
             }
@@ -420,6 +421,7 @@ class MainActivity : AppCompatActivity() {
 
             lastTimestamp = timestamp
 
+            // TODO count hidden points in distance
             if (!((filter && rowSplit[3].toDouble() > threshold) || computeDistance(lastLongitude, lastLatitude, -0.99578, 37.6038) < 500)) {
 
                 // copy coordinates
