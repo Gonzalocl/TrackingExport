@@ -314,27 +314,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getPlacemarkString(longitude: Double, latitude: Double, absoluteTime: Long, relativeTime: Long): String {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
-            val absoluteCalendar = GregorianCalendar.getInstance()
-            absoluteCalendar.time = Date(absoluteTime)
+        val absoluteHours = timestampGetHours(absoluteTime)
+        val absoluteMinutes = timestampGetMinutes(absoluteTime)
 
-            val absoluteHours = absoluteCalendar.get(Calendar.HOUR_OF_DAY)
-            val absoluteMinutes = absoluteCalendar.get(Calendar.MINUTE).toString().padStart(2, '0')
+        val relativeHours: Long = relativeTime/1000/60/60
+        val relativeMinutes = (relativeTime/1000/60 % 60).toString().padStart(2, '0')
 
-            val relativeHours: Long = relativeTime/1000/60/60
-            val relativeMinutes = (relativeTime/1000/60 % 60).toString().padStart(2, '0')
+        val name = "$absoluteHours:$absoluteMinutes / $relativeHours:$relativeMinutes"
+        val description = "Tiempo absoluto: $absoluteHours:$absoluteMinutes<br>Tiempo relativo: $relativeHours:$relativeMinutes"
+        val coordinates = "$longitude,$latitude,0"
 
-            val name = "$absoluteHours:$absoluteMinutes / $relativeHours:$relativeMinutes"
-            val description = "Tiempo absoluto: $absoluteHours:$absoluteMinutes<br>Tiempo relativo: $relativeHours:$relativeMinutes"
-            val coordinates = "$longitude,$latitude,0"
+        return placemarkTemplate.format(name, description, coordinates)
 
-            return placemarkTemplate.format(name, description, coordinates)
-        } else {
-//            TODO("VERSION.SDK_INT < N")
-            Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show()
-            return ""
-        }
     }
 
     private fun computeDistance(lastLongitude: Double, lastLatitude: Double, longitude: Double, latitude: Double): Double {
