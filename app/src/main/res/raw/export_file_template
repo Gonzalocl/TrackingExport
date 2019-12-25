@@ -29,7 +29,7 @@
 
         <Style id="line-original">
             <LineStyle>
-                <color>ffff0000</color>
+                <color>ffff00ff</color>
                 <width>2</width>
             </LineStyle>
         </Style>

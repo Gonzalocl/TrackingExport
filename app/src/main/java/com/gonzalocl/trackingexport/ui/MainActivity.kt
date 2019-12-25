@@ -244,13 +244,12 @@ class MainActivity : AppCompatActivity() {
         timestampPlacemarks.append(getPlacemarkString(longitude, latitude, timestamp, timestamp-trackStartTime) + "\n")
 
 
+        // compute car tracks
+        val carGoingDescription = StringBuffer()
+        computeCarTrack(carGoing, carGoingDescription, carGoingCoordinates, carGoingCoordinatesOriginal)
 
-
-
-
-
-
-
+        val carReturnDescription = StringBuffer()
+        computeCarTrack(carReturn, carReturnDescription, carReturnCoordinates, carReturnCoordinatesOriginal)
 
 
         // global title
@@ -275,9 +274,9 @@ class MainActivity : AppCompatActivity() {
             trackDescription,
             trackingCoordinates,
             timestampPlacemarks,
-            "",
+            carGoingDescription,
             carGoingCoordinates,
-            "",
+            carReturnDescription,
             carReturnCoordinates,
             trackingCoordinatesOriginal,
             carGoingCoordinatesOriginal,
@@ -332,6 +331,93 @@ class MainActivity : AppCompatActivity() {
                     ((longitude - lastLongitude) * (cos(((latitude + lastLatitude) / 2.0) * Math.PI / 180.0)) *
                             (EARTH_MERIDIONAL_CIRCUMFERENCE / 360.0)).pow(2.0)
         )
+    }
+
+    private fun computeCarTrack(tracking: File, trackingDescription: StringBuffer, trackingCoordinates: StringBuffer, trackingCoordinatesOriginal: StringBuffer) {
+        val filter = TrackingExport.filterAccuracy
+        val threshold = TrackingExport.filterAccuracyThreshold
+
+
+        val trackingFileReader = FileReader(tracking)
+        val trackingBufferedReader = BufferedReader(trackingFileReader)
+
+
+        trackingBufferedReader.readLine()
+        var row = trackingBufferedReader.readLine()
+        var rowSplit = row.split(",")
+        val trackStartTime = rowSplit[4].toLong()
+        var totalDistance = 0.0
+
+
+        var latitude = 0.0
+        var longitude = 0.0
+        var timestamp: Long = 0
+
+        var lastLatitude = 0.0
+        var lastLongitude = 0.0
+        var lastTimestamp: Long = 0
+
+        var ok = false
+        while (row != null && !ok) {
+            rowSplit = row.split(",")
+            lastLatitude = rowSplit[0].toDouble()
+            lastLongitude = rowSplit[1].toDouble()
+            lastTimestamp = rowSplit[4].toLong()
+
+            if (!((filter && rowSplit[3].toDouble() > threshold) || computeDistance(lastLongitude, lastLatitude, -0.99578, 37.6038) < 500)) {
+                ok = true
+            }
+            row = trackingBufferedReader.readLine()
+        }
+
+        if (!ok) {
+            Toast.makeText(this, "All car points filtered stopping", Toast.LENGTH_LONG).show()
+            trackingFileReader.close()
+            trackingBufferedReader.close()
+            return
+        }
+
+        // copy coordinates
+        trackingCoordinates.append("$lastLongitude,$lastLatitude,0\n")
+
+        // set first placemark
+//        timestampPlacemarks.append(getPlacemarkString(lastLongitude, lastLatitude, trackStartTime, 0) + "\n")
+
+        while (row != null) {
+            rowSplit = row.split(",")
+            latitude = rowSplit[0].toDouble()
+            longitude = rowSplit[1].toDouble()
+            timestamp = rowSplit[4].toLong()
+
+            // copy coordinates original
+            trackingCoordinatesOriginal.append("$longitude,$latitude,0\n")
+
+            // check timestamp order
+            if (lastTimestamp > timestamp) {
+                Toast.makeText(this, "TIMESTAMP ORDER INVERTED DETECTED", Toast.LENGTH_LONG).show()
+            }
+
+            lastTimestamp = timestamp
+
+            if (!((filter && rowSplit[3].toDouble() > threshold) || computeDistance(lastLongitude, lastLatitude, -0.99578, 37.6038) < 500)) {
+
+                // copy coordinates
+                trackingCoordinates.append("$longitude,$latitude,0\n")
+
+                // compute distance
+                totalDistance += computeDistance(lastLongitude, lastLatitude, longitude, latitude)
+
+                lastLatitude = latitude
+                lastLongitude = longitude
+            }
+            row = trackingBufferedReader.readLine()
+        }
+
+        trackingFileReader.close()
+        trackingBufferedReader.close()
+
+        // set last placemark
+//        timestampPlacemarks.append(getPlacemarkString(longitude, latitude, timestamp, timestamp-trackStartTime) + "\n")
     }
 
 }
