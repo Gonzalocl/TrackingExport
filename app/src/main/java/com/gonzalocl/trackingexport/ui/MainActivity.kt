@@ -248,8 +248,7 @@ class MainActivity : AppCompatActivity() {
         val trackTime = lastTimestamp - trackStartTime
         val trackHours: Long = trackTime/1000/60/60
         val trackMinutes = (trackTime/1000/60 % 60).toString().padStart(2, '0')
-        totalDistance /= 1000
-        val totalDistanceString = "%.2f".format(totalDistance)
+        val totalDistanceString = "%.2f".format(totalDistance/1000)
 
         val trackDescription = "$trackTitle<br>${trackHours}h${trackMinutes}min, $totalDistanceString km"
 
@@ -303,7 +302,7 @@ class MainActivity : AppCompatActivity() {
             val description = "Tiempo absoluto: $absoluteHours:$absoluteMinutes<br>Tiempo relativo: $relativeHours:$relativeMinutes"
             val coordinates = "$longitude,$latitude,0"
 
-            return String.format(placemarkTemplate, name, description, coordinates)
+            return placemarkTemplate.format(name, description, coordinates)
         } else {
 //            TODO("VERSION.SDK_INT < N")
             Toast.makeText(this, "NOT IMPLEMENTED", Toast.LENGTH_LONG).show()
