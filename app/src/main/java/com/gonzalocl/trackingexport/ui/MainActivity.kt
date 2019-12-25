@@ -174,10 +174,21 @@ class MainActivity : AppCompatActivity() {
         var ok = false
         while (row != null && !ok) {
             rowSplit = row.split(",")
+            lastLatitude = rowSplit[0].toDouble()
+            lastLongitude = rowSplit[1].toDouble()
+            timestamp = rowSplit[4].toLong()
+
+            // copy coordinates original
+            trackingCoordinatesOriginal.append("$lastLongitude,$lastLatitude,0\n")
+
+            // check timestamp order
+            if (lastTimestamp > timestamp) {
+                Toast.makeText(this, "TIMESTAMP ORDER INVERTED DETECTED", Toast.LENGTH_LONG).show()
+            }
+
+            lastTimestamp = timestamp
+
             if (!(filter && rowSplit[3].toDouble() > threshold)) {
-                lastLatitude = rowSplit[0].toDouble()
-                lastLongitude = rowSplit[1].toDouble()
-                lastTimestamp = rowSplit[4].toLong()
                 ok = true
             } else {
                 filtered++
@@ -362,7 +373,17 @@ class MainActivity : AppCompatActivity() {
             rowSplit = row.split(",")
             lastLatitude = rowSplit[0].toDouble()
             lastLongitude = rowSplit[1].toDouble()
-            lastTimestamp = rowSplit[4].toLong()
+            timestamp = rowSplit[4].toLong()
+
+            // copy coordinates original
+            trackingCoordinatesOriginal.append("$lastLongitude,$lastLatitude,0\n")
+
+            // check timestamp order
+            if (lastTimestamp > timestamp) {
+                Toast.makeText(this, "TIMESTAMP ORDER INVERTED DETECTED", Toast.LENGTH_LONG).show()
+            }
+
+            lastTimestamp = timestamp
 
             if (!((filter && rowSplit[3].toDouble() > threshold) || computeDistance(lastLongitude, lastLatitude, -0.99578, 37.6038) < 500)) {
                 ok = true
