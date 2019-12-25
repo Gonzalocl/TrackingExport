@@ -159,16 +159,16 @@ class MainActivity : AppCompatActivity() {
         var rowSplit = row.split(",")
         val trackStartTime = rowSplit[4].toLong()
         var nextPlacemark = trackStartTime + interval
-        var totalDistance: Double = 0.0
+        var totalDistance = 0.0
         var filtered = 0
 
 
-        var latitude: Double = 0.0
-        var longitude: Double = 0.0
+        var latitude = 0.0
+        var longitude = 0.0
         var timestamp: Long = 0
 
-        var lastLatitude: Double = 0.0
-        var lastLongitude: Double = 0.0
+        var lastLatitude = 0.0
+        var lastLongitude = 0.0
         var lastTimestamp: Long = 0
 
         var ok = false
