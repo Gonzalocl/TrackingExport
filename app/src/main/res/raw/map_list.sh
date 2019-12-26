@@ -29,10 +29,11 @@ elif [[ $1 = "rebuild" ]]; then
             echo "<br>" >> $map_list_page_path
         else
             map_id=$(echo $link | cut -d "=" -f 2 | cut -d "&" -f 1)
-#            map_title=$(wget -O - "$link" 2>/dev/null | tr "[" "\n" | grep '\\"mf.map\\",\\"'"$map_id"'\\",\\"' | cut -d '"' -f 6 | rev | cut -c 1 --complement | rev)
-            map_title=$map_id
+            map_title=$(wget -O - "$link" 2>/dev/null | tr "[" "\n" | grep '\\"mf.map\\",\\"'"$map_id"'\\",\\"' | cut -d '"' -f 6 | rev | cut -c 1 --complement | rev)
+#            map_title=$map_id
 
             echo '<a href="'"$link"'">'"$map_title"'</a><br>' >> $map_list_page_path
+            echo -e "${COLOR_LOG}Adding $map_title${COLOR_RESET}"
 
         fi
 
