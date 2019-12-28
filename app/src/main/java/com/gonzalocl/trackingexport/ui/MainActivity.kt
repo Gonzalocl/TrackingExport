@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gonzalocl.trackingexport.R
 import com.gonzalocl.trackingexport.app.TrackingExport
 import java.io.*
-import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.cos
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         trackingBufferedReader.readLine()
         var row = trackingBufferedReader.readLine()
         var rowSplit = row.split(",")
-        val trackStartTime = rowSplit[4].toLong()
+        val trackStartTime = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).parse(tracking.name.split(".")[0]).time
         var nextPlacemark = trackStartTime + interval
         var totalDistance = 0.0
         var filtered = 0
