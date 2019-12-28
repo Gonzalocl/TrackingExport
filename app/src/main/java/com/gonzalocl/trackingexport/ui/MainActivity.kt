@@ -274,14 +274,29 @@ class MainActivity : AppCompatActivity() {
         val trackMinutes = (trackTime/1000/60 % 60).toString().padStart(2, '0')
         val totalDistanceString = "%.2f".format(totalDistance/1000)
 
-        val trackDescription = "$trackTitle<br>${trackHours}h${trackMinutes}min, $totalDistanceString km"
-
+        val globalDescription = "$trackTitle<br>${trackHours}h${trackMinutes}min, $totalDistanceString km"
+        val trackDescription = StringBuffer()
+        trackDescription.append("$globalDescription<br>")
+        trackDescription.append("Salida: %02d:%02d<br>".format(timestampGetHours(trackStartTime), timestampGetMinutes(trackStartTime)))
+        trackDescription.append("Llegada: %02d:%02d<br>".format(timestampGetHours(lastTimestamp), timestampGetMinutes(lastTimestamp)))
+        trackDescription.append("Tiempo: %d:%02d<br>".format(trackTime/1000/60/60, trackTime/1000/60 % 60))
+        trackDescription.append("Distancia: %.2f km<br>".format(totalDistance/1000))
+        trackDescription.append("%02d:%02d:%02d\t%02d:%02d:%02d\t.\t%d\t%s".format(
+            timestampGetHours(trackStartTime),
+            timestampGetMinutes(trackStartTime),
+            timestampGetSeconds(trackStartTime),
+            timestampGetHours(lastTimestamp),
+            timestampGetMinutes(lastTimestamp),
+            timestampGetSeconds(lastTimestamp),
+            totalDistance.toInt(),
+            trackTitle
+        ))
 
 
         val exportedFilePrintWriter = PrintWriter(exportedFile)
         exportedFilePrintWriter.printf(templateString,
             globalTitle,
-            trackDescription,
+            globalDescription,
             trackTitle,
             trackDescription,
             trackingCoordinates,
@@ -459,6 +474,16 @@ class MainActivity : AppCompatActivity() {
             val calendar = GregorianCalendar.getInstance()
             calendar.time = Date(timestamp)
             return calendar.get(Calendar.MINUTE)
+        } else {
+            return 0
+        }
+    }
+
+    private fun timestampGetSeconds(timestamp: Long): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val calendar = GregorianCalendar.getInstance()
+            calendar.time = Date(timestamp)
+            return calendar.get(Calendar.SECOND)
         } else {
             return 0
         }
