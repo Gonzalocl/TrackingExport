@@ -318,10 +318,10 @@ class MainActivity : AppCompatActivity() {
         val absoluteMinutes = timestampGetMinutes(absoluteTime)
 
         val relativeHours: Long = relativeTime/1000/60/60
-        val relativeMinutes = (relativeTime/1000/60 % 60).toString().padStart(2, '0')
+        val relativeMinutes = relativeTime/1000/60 % 60
 
-        val name = "$absoluteHours:$absoluteMinutes / $relativeHours:$relativeMinutes"
-        val description = "Tiempo absoluto: $absoluteHours:$absoluteMinutes<br>Tiempo relativo: $relativeHours:$relativeMinutes"
+        val name = "%02d:%02d / %d:%02d".format(absoluteHours, absoluteMinutes, relativeHours, relativeMinutes)
+        val description = "Tiempo absoluto: %02d:%02d<br>Tiempo relativo: %d:%02d".format(absoluteHours, absoluteMinutes, relativeHours, relativeMinutes)
         val coordinates = "$longitude,$latitude,0"
 
         return placemarkTemplate.format(name, description, coordinates)
@@ -437,8 +437,8 @@ class MainActivity : AppCompatActivity() {
         // track description
         val trackTime = lastTimestamp - trackStartTime
 
-        trackingDescription.append("Hora de salida: %02d:%02d<br>".format(timestampGetHours(trackStartTime), timestampGetMinutes(trackStartTime)))
-        trackingDescription.append("Hora de llegada: %02d:%02d<br>".format(timestampGetHours(lastTimestamp), timestampGetMinutes(lastTimestamp)))
+        trackingDescription.append("Salida: %02d:%02d<br>".format(timestampGetHours(trackStartTime), timestampGetMinutes(trackStartTime)))
+        trackingDescription.append("Llegada: %02d:%02d<br>".format(timestampGetHours(lastTimestamp), timestampGetMinutes(lastTimestamp)))
         trackingDescription.append("Tiempo: %d:%02d<br>".format(trackTime/1000/60/60, trackTime/1000/60 % 60))
         trackingDescription.append("Distancia: %.2f km".format(totalDistance/1000))
 
