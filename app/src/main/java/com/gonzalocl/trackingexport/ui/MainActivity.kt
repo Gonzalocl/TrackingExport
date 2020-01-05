@@ -266,7 +266,8 @@ class MainActivity : AppCompatActivity() {
 
         // global title
         val trackDateSplit = trackDate.split("-")
-        val globalTitle = "${trackDateSplit[2]}/${trackDateSplit[1]}/${trackDateSplit[0][2]}${trackDateSplit[0][3]} $trackTitle"
+        val trackDateString = "${trackDateSplit[2]}/${trackDateSplit[1]}/${trackDateSplit[0][2]}${trackDateSplit[0][3]}"
+        val globalTitle = "$trackDateString $trackTitle"
 
         // track description
         val trackTime = lastTimestamp - trackStartTime
@@ -281,7 +282,8 @@ class MainActivity : AppCompatActivity() {
         trackDescription.append("Llegada: %02d:%02d<br>".format(timestampGetHours(lastTimestamp), timestampGetMinutes(lastTimestamp)))
         trackDescription.append("Tiempo: %d:%02d<br>".format(trackTime/1000/60/60, trackTime/1000/60 % 60))
         trackDescription.append("Distancia: %.2f km<br>".format(totalDistance/1000))
-        trackDescription.append("%02d:%02d:%02d\t%02d:%02d:%02d\t.\t%d\t%s".format(
+        trackDescription.append("%s\tMonte\t%02d:%02d:%02d\t%02d:%02d:%02d\t.\t%d\t.\t%s".format(
+            trackDateString,
             timestampGetHours(trackStartTime),
             timestampGetMinutes(trackStartTime),
             timestampGetSeconds(trackStartTime),
