@@ -319,7 +319,6 @@ class MainActivity : AppCompatActivity() {
             trackTitle
         ))
 
-
         val exportedFilePrintWriter = PrintWriter(exportedFile)
         exportedFilePrintWriter.printf(templateString,
             globalTitle,
