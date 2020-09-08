@@ -1,6 +1,7 @@
 package com.gonzalocl.trackingexport.ui
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.icu.util.GregorianCalendar
 import android.os.Build
 import android.os.Bundle
@@ -10,7 +11,11 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import android.Manifest
+import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.gonzalocl.trackingexport.R
 import com.gonzalocl.trackingexport.app.TrackingExport
 import java.io.*
@@ -74,9 +79,29 @@ class MainActivity : AppCompatActivity() {
 
     fun clickAuto(view: View) {
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this, "NO STORAGE PERMISSION", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                Toast.makeText(this, "NO STORAGE MANAGER PERMISSION", Toast.LENGTH_LONG).show()
+                startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                return
+            }
+        }
+
         val tracksDir = File(Environment.getExternalStoragePublicDirectory(documentsPath), tracksPath)
 
         val trackFiles = tracksDir.listFiles()
+        Arrays.sort(trackFiles)
+
+        if (trackFiles == null || trackFiles.size < 6) {
+            Toast.makeText(this, "NO FILES FOUND", Toast.LENGTH_LONG).show()
+            return
+        }
 
         val carGoing = trackFiles[trackFiles.size-6]
         val tracking = trackFiles[trackFiles.size-4]
